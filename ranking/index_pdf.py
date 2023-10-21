@@ -1,8 +1,6 @@
 from PyPDF2 import PdfReader
 import nltk
 
-path = 'docs/ml/NIPS-2017-attention-is-all-you-need-Paper.pdf'
-
 def index_document(path):
     reader = PdfReader(path)
     text = ""
@@ -14,7 +12,6 @@ def index_document(path):
     # print(text)
     # print('-------------------------------------')
 
-    nltk.download("punkt")
     # делим текст на слова
     words = nltk.word_tokenize(text)
     words.remove
@@ -31,5 +28,3 @@ def index_document(path):
             else:
                 terms[word] += 1
     return terms
-
-print(index_document(path))
