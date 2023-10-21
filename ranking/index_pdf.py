@@ -1,6 +1,8 @@
 from PyPDF2 import PdfReader
 import nltk
 
+from document import Document
+
 def index_document(path):
     reader = PdfReader(path)
     text = ""
@@ -8,9 +10,12 @@ def index_document(path):
         text += page.extract_text() + "\n"
         break
 
-
-    # print(text)
-    # print('-------------------------------------')
+    title = reader.metadata.title
+    if title == None:
+        title = reader.pages[0].extract_text().partition('\n')[0]
+        # if len(reader.outline) > 0:
+            # title = reader.outline[0].title
+    document = Document(title, path)
 
     # делим текст на слова
     words = nltk.word_tokenize(text)
@@ -19,12 +24,9 @@ def index_document(path):
     stopwords = { ',', '.', '!', '?', '(', ')' }
     words = [word for word in words if not word.lower() in stopwords]
 
-    terms = {}
     for word in words:
         # отсекаем короткие слова
         if len(word) > 2:
-            if not word in terms:
-                terms[word] = 1
-            else:
-                terms[word] += 1
-    return terms
+            document.add_word(word.lower())
+
+    return document
