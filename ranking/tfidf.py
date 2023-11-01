@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 import glob
 import os
+from simplemma import lemmatize
 
 from index_pdf import index_document
 
@@ -27,6 +28,7 @@ for doc in documents:
 prompt = input('Enter search prompt: ') if args.prompt == '?' else args.prompt
 
 for word in prompt.split(' '):
+    word = lemmatize(word, lang=('ru', 'en'))
     for doc in documents:
         if not word in doc.terms:
             continue
@@ -37,4 +39,4 @@ for word in prompt.split(' '):
 print('Documents:')
 documents.sort(key=lambda x: x.score, reverse=True)
 for doc in documents[:args.num_matches]:
-    print(f'{doc.path}: {doc.title} => {doc.score:.2f}')
+    print(f'{doc.path}: "{doc.title}" => {doc.score:.2f}')

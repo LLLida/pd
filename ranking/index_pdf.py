@@ -1,5 +1,6 @@
 from PyPDF2 import PdfReader
 import nltk
+from simplemma import lemmatize
 
 from document import Document
 
@@ -27,6 +28,8 @@ def index_document(path):
     for word in words:
         # отсекаем короткие слова
         if len(word) > 2:
-            document.add_word(word.lower())
+            w = word.lower()
+            w = lemmatize(w, lang=('ru', 'en'))
+            document.add_word(w)
 
     return document
